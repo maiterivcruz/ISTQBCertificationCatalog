@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISTQB® Certification Catalog</title>
+  <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'questions/css/catalog.css' %}">
+
+</head>
+
+<body>
+
+  <header>
+    <h1>ISTQB® Certification Catalog</h1>
+    <p>Select a certification to practice with sample exam questions.</p>
+  </header>
+
+  <main>
+    <h2 class="page-title">Available Certifications</h2>
+    <p class="page-sub">Click an exam button on any certification to start practicing. Certifications marked <em>Coming
+        Soon</em> will be added in future updates.</p>
+
+    {% for section in certifications %}
+    <div class="category-section">
+      <div class="category-heading">{{ section.category }}</div>
+      <div class="card-grid">
+        {% for cert in section.items %}
+        <div class="cert-card {% if not cert.available %}unavailable{% endif %}">
+          <div class="card-top">
+            <div class="badge-row">
+              <span class="badge badge-{{ cert.badge_color }}">{{ cert.badge }}</span>
+              {% if not cert.available %}<span class="badge-coming-soon">Coming Soon</span>{% endif %}
+              <span class="cert-short">{{ cert.short }}</span>
+            </div>
+            <div class="cert-title">{{ cert.title }}</div>
+            <div class="cert-desc">{{ cert.description }}</div>
+          </div>
+
+          <div class="card-footer">
+            {% if cert.available %}
+            {% for exam in cert.exams %}
+            <a href="{% url 'question_list' exam=exam.exam_id %}" class="btn-exam">{{ exam.label }}</a>
+            {% endfor %}
+            {% else %}
+            <span class="btn-disabled">No Exams Yet</span>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </main>
+
+  <footer class="site-footer">
+    Disclaimer: This application is an independent, non-commercial educational project created for training and test
+    automation demonstration purposes.
+    <a href="https://www.istqb.org" target="_blank" rel="noopener noreferrer">ISTQB&reg;</a>
+    is a registered trademark of the International Software Testing Qualifications Board.
+    All sample exam questions, syllabus references, and related materials are the intellectual property of ISTQB&reg;.
+  </footer>
+
+</body>
+
+</html>

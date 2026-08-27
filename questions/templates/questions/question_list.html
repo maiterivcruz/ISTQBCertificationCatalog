@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISTQB® Foundation Level — Exam {{ current_exam }}</title>
+    <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/css/question_list.css' %}">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="{% url 'catalog' %}" class="header-back-link">&#8592; Certifications</a>
+            <h1>ISTQB&reg; Foundation Level &mdash; Exam {{ current_exam }}</h1>
+        </div>
+        <div id="header-right">
+            <div class="score-badge">
+                <span class="label">Correct</span>
+                <span class="count" id="right-count">0</span>
+            </div>
+            <div class="score-badge">
+                <span class="label">Wrong</span>
+                <span class="count" id="wrong-count">0</span>
+            </div>
+            <div id="status-badge">
+                <span class="label">Status</span>
+                <span class="status-text status-pending" id="status-text">Pending</span>
+            </div>
+            <button class="hdr-btn btn-reset" onclick="resetAll()">Reset</button>
+            <button class="hdr-btn btn-shuffle" id="shuffle-btn" onclick="shuffleQuestions()">&#x1F500; Shuffle</button>
+            <button class="hdr-btn btn-submit" id="submit-btn" onclick="submitExam()">Submit</button>
+        </div>
+    </header>
+
+    <div class="shell">
+
+        <!-- Left sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-title">Select Exam</div>
+            {% for e in exams %}
+            {% if e == 'E' %}
+            <hr class="sidebar-divider">{% endif %}
+            <a href="{% url 'question_list' exam=e %}" class="exam-link {% if e == current_exam %}active{% endif %}">
+                <div class="exam-badge">{{ e }}</div>
+                {% if e == 'E' %}Appendix A{% else %}Exam {{ e }}{% endif %}
+            </a>
+            {% endfor %}
+        </nav>
+
+        <!-- Questions -->
+        <div class="content-area">
+            <main>
+                <p class="page-intro">
+                    Select an answer for each question, then click <strong>Submit</strong> to check your results.
+                    The correct answers and explanations will be revealed after submission.
+                </p>
+
+                {% if questions %}
+                {% for q in questions %}
+                <div class="question-card" id="card-{{ q.id }}" data-correct="{{ q.correct_option }}">
+                    <div class="question-header">
+                        <div class="q-number">{{ forloop.counter }}</div>
+                        <div class="q-stem">{{ q.stem }}</div>
+                    </div>
+
+                    <div class="options">
+                        {% for letter, text in q.options %}
+                        <label class="option-label" id="lbl-{{ q.id }}-{{ letter }}">
+                            <input type="radio" name="q{{ q.id }}" value="{{ letter }}" />
+                            <span class="option-letter">{{ letter }})</span>
+                            <span class="option-text">{{ text }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+
+                    <div class="answer-panel" id="answer-{{ q.id }}">
+                        <div class="answer-label">Explanation</div>
+                        {{ q.answer }}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty">No questions found for Exam {{ current_exam }}.</div>
+                {% endif %}
+            </main>
+        </div>
+
+    </div>
+
+    <script src="{% static 'questions/js/question_list.js' %}" defer></script>
+
+    <footer class="site-footer">
+        Disclaimer: This application is an independent, non-commercial educational project created for training and test
+        automation demonstration purposes.
+        <a href="https://www.istqb.org" target="_blank" rel="noopener noreferrer">ISTQB&reg;</a>
+        is a registered trademark of the International Software Testing Qualifications Board.
+        All sample exam questions, syllabus references, and related materials are the intellectual property of
+        ISTQB&reg;.
+    </footer>
+
+</body>
+
+</html>

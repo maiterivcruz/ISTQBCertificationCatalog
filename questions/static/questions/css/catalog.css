@@ -1,0 +1,192 @@
+/* ── Header ── */
+header {
+    background: #2d3748;
+    color: #fff;
+    padding: 1.25rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+}
+
+header h1 {
+    font-size: 1.35rem;
+    letter-spacing: .3px;
+}
+
+header p {
+    font-size: .85rem;
+    color: #a0aec0;
+    margin-top: .3rem;
+}
+
+/* ── Main ── */
+main {
+    max-width: 1100px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem 5rem;
+}
+
+.page-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: .4rem;
+}
+
+.page-sub {
+    color: #718096;
+    font-size: .95rem;
+    margin-bottom: 2.5rem;
+}
+
+/* ── Category section ── */
+.category-section {
+    margin-bottom: 3rem;
+}
+
+.category-heading {
+    font-size: .7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #718096;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: .5rem;
+    margin-bottom: 1.25rem;
+}
+
+/* ── Card grid ── */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+}
+
+.cert-card {
+    background: #fff;
+    border-radius: .75rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow .2s, transform .15s;
+    overflow: hidden;
+}
+
+.cert-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, .13);
+    transform: translateY(-2px);
+}
+
+.cert-card.unavailable {
+    opacity: .65;
+}
+
+.cert-card.unavailable:hover {
+    transform: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+}
+
+.card-top {
+    padding: 1.25rem 1.25rem .75rem;
+    flex: 1;
+}
+
+.badge-row {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .75rem;
+}
+
+.badge {
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    border-radius: .3rem;
+    padding: .2rem .55rem;
+}
+
+.badge-blue {
+    background: #ebf4ff;
+    color: #2b6cb0;
+}
+
+.badge-purple {
+    background: #faf5ff;
+    color: #6b46c1;
+}
+
+.badge-green {
+    background: #f0fff4;
+    color: #276749;
+}
+
+.badge-coming-soon {
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    border-radius: .3rem;
+    padding: .2rem .55rem;
+    background: #fff3cd;
+    color: #856404;
+}
+
+.cert-short {
+    font-size: .75rem;
+    color: #a0aec0;
+    font-weight: 600;
+}
+
+.cert-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: .5rem;
+    line-height: 1.35;
+}
+
+.cert-desc {
+    font-size: .85rem;
+    color: #718096;
+    line-height: 1.55;
+}
+
+/* ── Card footer with exam buttons ── */
+.card-footer {
+    padding: .9rem 1.25rem 1.1rem;
+    border-top: 1px solid #f0f4f8;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+}
+
+.btn-exam {
+    background: #667eea;
+    color: #fff;
+    border: none;
+    border-radius: .4rem;
+    padding: .4rem .85rem;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s, opacity .15s;
+    display: inline-block;
+}
+
+.btn-exam:hover {
+    background: #5a67d8;
+}
+
+.btn-disabled {
+    background: #e2e8f0;
+    color: #a0aec0;
+    border: none;
+    border-radius: .4rem;
+    padding: .4rem .85rem;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: not-allowed;
+    display: inline-block;
+}
