@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Syllabus — {{ cert.short }}</title>
+    <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/css/catalog.css' %}">
+</head>
+
+<body>
+    <header>
+        <h1>ISTQB&reg; Certification Catalog</h1>
+    </header>
+
+    <main>
+        <h2 class="page-title">Syllabus not available yet</h2>
+        <p class="page-sub">
+            The syllabus document for <strong>{{ cert.title }}</strong> ({{ cert.short }}) hasn't been uploaded yet.
+            Add a PDF to <code>resources/certifications/{{ cert.resource_dir }}/syllabus/</code> to make it available
+            here.
+        </p>
+        <p><a href="{% url 'catalog' %}">&#8592; Back to Certifications</a></p>
+    </main>
+</body>
+
+</html>

@@ -190,3 +190,23 @@ main {
     cursor: not-allowed;
     display: inline-block;
 }
+
+.btn-syllabus {
+    background: #fff;
+    color: #667eea;
+    border: 1.5px solid #667eea;
+    border-radius: .4rem;
+    padding: .4rem .85rem;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .15s, color .15s;
+    display: inline-block;
+    margin-left: auto;
+}
+
+.btn-syllabus:hover {
+    background: #667eea;
+    color: #fff;
+}

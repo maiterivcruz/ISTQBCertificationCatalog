@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ISTQB® Foundation Level — Exam {{ current_exam }}</title>
+    <title>ISTQB&reg; {{ cert.short }} &mdash; {{ current_exam_label }}</title>
     <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
     <link rel="stylesheet" href="{% static 'questions/css/question_list.css' %}">
 </head>
@@ -15,9 +15,13 @@
     <header>
         <div class="header-left">
             <a href="{% url 'catalog' %}" class="header-back-link">&#8592; Certifications</a>
-            <h1>ISTQB&reg; Foundation Level &mdash; Exam {{ current_exam }}</h1>
+            <h1>ISTQB&reg; {{ cert.short }} &mdash; {{ current_exam_label }}</h1>
         </div>
         <div id="header-right">
+            <div id="timer-badge" class="score-badge">
+                <span class="label">Time left</span>
+                <span class="count" id="timer-count">60:00</span>
+            </div>
             <div class="score-badge">
                 <span class="label">Correct</span>
                 <span class="count" id="right-count">0</span>
@@ -42,13 +46,28 @@
         <nav class="sidebar">
             <div class="sidebar-title">Select Exam</div>
             {% for e in exams %}
-            {% if e == 'E' %}
+            {% if e.exam_id == 'E' %}
+            <hr class="sidebar-divider">
+            <a href="{% url 'syllabus' cert_id=cert_id %}" class="exam-link syllabus-link" target="_blank"
+                rel="noopener noreferrer">
+                <div class="exam-badge">&#128196;</div>
+                Syllabus
+            </a>
             <hr class="sidebar-divider">{% endif %}
-            <a href="{% url 'question_list' exam=e %}" class="exam-link {% if e == current_exam %}active{% endif %}">
-                <div class="exam-badge">{{ e }}</div>
-                {% if e == 'E' %}Appendix A{% else %}Exam {{ e }}{% endif %}
+            <a href="{% url 'question_list' cert_id=cert_id exam=e.exam_id %}"
+                class="exam-link {% if e.exam_id == current_exam %}active{% endif %}">
+                <div class="exam-badge">{{ e.exam_id }}</div>
+                {{ e.label }}
             </a>
             {% endfor %}
+            {% if not has_appendix %}
+            <hr class="sidebar-divider">
+            <a href="{% url 'syllabus' cert_id=cert_id %}" class="exam-link syllabus-link" target="_blank"
+                rel="noopener noreferrer">
+                <div class="exam-badge">&#128196;</div>
+                Syllabus
+            </a>
+            {% endif %}
         </nav>
 
         <!-- Questions -->
@@ -64,7 +83,26 @@
                 <div class="question-card" id="card-{{ q.id }}" data-correct="{{ q.correct_option }}">
                     <div class="question-header">
                         <div class="q-number">{{ forloop.counter }}</div>
-                        <div class="q-stem">{{ q.stem }}</div>
+                        <div class="q-stem">
+                            {{ q.stem_before }}
+                            {% if q.table %}
+                            <table class="q-data-table">
+                                <thead>
+                                    <tr>
+                                        {% for h in q.table.headers %}<th>{{ h }}</th>{% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in q.table.rows %}
+                                    <tr>
+                                        {% for cell in row %}<td>{{ cell }}</td>{% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            {% endif %}
+                            {{ q.stem_after }}
+                        </div>
                     </div>
 
                     <div class="options">

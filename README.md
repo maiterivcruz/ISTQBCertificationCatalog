@@ -1,16 +1,18 @@
 # ISTQB Certification Catalog
 
-A Django web app for practicing ISTQB® certification exam questions, with per-exam navigation, radio-button answer selection, auto-grading, and a pass/fail score counter.
+A Django web app for browsing the full ISTQB® certification catalog and practicing sample exam questions, with per-certification navigation, radio-button answer selection, auto-grading, syllabus downloads, and a pass/fail score counter.
 
 ## Features
 
-- Certification catalog landing page with cards organized by level (Foundation, Advanced, Specialist)
+- Certification catalog landing page covering **26 ISTQB® certifications** (Core Foundation, Core Advanced, Specialist, and Expert Level), organized by category
+- Each card links to its official **Syllabus PDF**, plus interactive **Exam** buttons for certifications with loaded sample exam questions
 - Questions displayed as cards with radio-button answer options
 - **Submit** button grades all answers at once; correct/wrong highlighted in green/red
 - Sticky header with live Correct / Wrong counters and a Pass/Fail status badge
 - **Reset** button clears all selections and scores
 - **Shuffle** button randomizes the question order; **Reset** restores the original order
-- Left sidebar to switch between exam sets (A, B, C, D, Appendix A)
+- Left sidebar to switch between exam sets and jump to the syllabus PDF
+- Exam button labels adapt automatically: certifications with a single loaded exam just show **Exam**; CTFL (which has multiple sets) shows **Exam A/B/C/D** plus **Appendix A**
 - Admin panel to add, edit, and reorder questions
 - External CSS files for shared, catalog, and exam-page styles
 - External JavaScript file for exam grading, reset, and shuffle behavior
@@ -19,6 +21,7 @@ A Django web app for practicing ISTQB® certification exam questions, with per-e
 
 - Python 3.10+
 - Django 6.x (installed via virtual environment)
+- `pypdf` (for parsing sample exam PDFs)
 
 ## Setup
 
@@ -37,37 +40,49 @@ python -m pip install django pypdf
 # 4. Apply migrations
 python manage.py migrate
 
-# 5. Seed an exam (PDFs are stored under resources/certifications/CTFL/sample_exams/)
-python manage.py seed_questions --exam A \
-  --questions-pdf "resources/certifications/CTFL/sample_exams/ISTQB_CTFL_v4.0_Sample-Exam-A-Questions_v1.7.pdf" \
-  --answers-pdf   "resources/certifications/CTFL/sample_exams/ISTQB_CTFL_v4.0_Sample-Exam-A-Answers_v1.7.pdf"
-
-# 6. (Optional) Create an admin superuser
+# 5. (Optional) Create an admin superuser
 python manage.py createsuperuser
 
-# 7. Start the development server
+# 6. Start the development server
 python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000/ in your browser.
+Open http://127.0.0.1:8000/ in your browser. The database (`db.sqlite3`) already ships with sample exam questions seeded for 21 certifications — no seeding step is required to try the app.
 
 ## Managing Questions
 
 Questions can be managed in two ways:
 
 - **Admin panel** — visit http://127.0.0.1:8000/admin/ (requires a superuser account)
-- **Seed command** — `python manage.py seed_questions --exam A` loads the selected exam and skips duplicates
+- **Seed command** — `python manage.py seed_questions --cert <id> --exam <letter>` parses a certification's sample exam PDFs and loads/updates its questions
 
-The default PDF versions are configured for Exams A through D:
+```bash
+# Load (or refresh) a certification's single sample exam
+python manage.py seed_questions --cert ct-ai --exam A
 
-```text
-Exam A: v1.7
-Exam B: v1.7
-Exam C: v1.6
-Exam D: v1.5
+# Load CTFL, which ships 4 exam sets plus an Appendix embedded in Exam A's PDF
+python manage.py seed_questions --cert ctfl --exam A --start 1 --end 40
+python manage.py seed_questions --cert ctfl --exam E --start 41 --end 66 \
+  --questions-pdf "resources/certifications/CTFL/sample_exams/ISTQB_CTFL_v4.0_Sample-Exam-A-Questions_v1.7.pdf" \
+  --answers-pdf   "resources/certifications/CTFL/sample_exams/ISTQB_CTFL_v4.0_Sample-Exam-A-Answers_v1.7.pdf"
+python manage.py seed_questions --cert ctfl --exam B
+python manage.py seed_questions --cert ctfl --exam C
+python manage.py seed_questions --cert ctfl --exam D
 ```
 
-Use `--questions-pdf` and `--answers-pdf` to provide different files. The `--exam` option accepts `A`, `B`, `C`, `D`, or `E`.
+Key options:
+
+| Flag | Description |
+|---|---|
+| `--cert <id>` | Certification id from the catalog (e.g. `ctfl`, `ct-ai`, `ctal-tm`). Defaults to `ctfl`. |
+| `--exam <letter>` | Exam letter to tag the loaded questions with (`A`–`E`). Defaults to `A`. |
+| `--clear` | Delete existing questions for that certification/exam before loading (use when re-parsing after a text-cleanup fix, to avoid duplicate rows). |
+| `--questions-pdf` / `--answers-pdf` | Override the auto-resolved PDF paths. Required for CTFL's Appendix A, which lives inside the Exam A PDF. |
+| `--start` / `--end` | 1-based inclusive slice of parsed questions to load (used to split CTFL's Exam A PDF into main exam + appendix). |
+
+For any certification other than CTFL, the command resolves default PDF paths from `resources/certifications/<CODE>/sample_exams/<CODE>_Sample-Exam-Questions.pdf` (and `-Answers.pdf`) automatically — no need to pass `--questions-pdf`/`--answers-pdf`.
+
+See [SKILL_load_pdf_questions.md](SKILL_load_pdf_questions.md) for full details on the PDF parsing format and how to adapt it for a new PDF layout.
 
 ## Project Structure
 
@@ -81,7 +96,8 @@ ISTQBCertificationCatalog/
 │   ├── templates/
 │   │   └── questions/
 │   │       ├── catalog.html
-│   │       └── question_list.html
+│   │       ├── question_list.html
+│   │       └── syllabus_missing.html
 │   ├── static/
 │   │   └── questions/
 │   │       ├── css/
@@ -94,17 +110,32 @@ ISTQBCertificationCatalog/
 │   │   └── commands/
 │   │       └── seed_questions.py
 │   ├── admin.py
-│   ├── models.py
+│   ├── models.py            # Question model (certification, exam, text, answer, correct_option)
 │   ├── urls.py
-│   └── views.py
+│   └── views.py             # catalog, syllabus, question_list views + CERTIFICATIONS catalog data
 ├── venv/                    # Virtual environment (not committed)
 ├── db.sqlite3               # SQLite database (not committed)
 ├── resources/
 │   └── certifications/
-│       └── CTFL/
-│           └── sample_exams/ # CTFL sample question and answer PDFs
+│       ├── CTFL/
+│       │   ├── syllabus/       # CTFL syllabus PDF
+│       │   └── sample_exams/   # CTFL sample question and answer PDFs (Exams A-D)
+│       └── <CODE>/             # One folder per other certification (e.g. CT-AI, CTAL-TM, ...)
+│           ├── syllabus/       # Official syllabus PDF
+│           └── sample_exams/   # Sample exam Questions/Answers PDFs (where publicly available)
 └── manage.py
 ```
+
+## Certification Catalog
+
+The catalog (`CERTIFICATIONS` in `questions/views.py`) lists all current (non-retiring) ISTQB® certifications:
+
+- **Core Foundation**: CTFL
+- **Core Advanced**: CTAL-AT, CTAL-TA, CTAL-TAE, CTAL-TM, CTAL-TTA
+- **Specialist**: CT-AI, CT-QDO, CT-GenAI, CT-MAT, CT-MBT, CT-TAS, CT-ATLaS, CT-AcT, CT-PT, CT-SEC, CT-STE, CT-UT, CT-FT, CT-AuT, CT-GaMe, CT-GT
+- **Expert Level**: CTEL-ITP-ATP, CTEL-ITP-ITPI, CTEL-TM-SM, CTEL-TM-OTM, CTEL-TM-MTT
+
+Every certification has a downloadable syllabus PDF. Most also have an interactive sample exam; a few (CTAL-TA, CT-STE, CTEL-ITP-ATP, CTEL-ITP-ITPI, and the three CTEL-TM parts) currently only offer the syllabus, either because no public answer key is available or because the official sample exam is open-ended rather than multiple-choice.
 
 ## Notes
 
@@ -113,4 +144,5 @@ ISTQBCertificationCatalog/
 
 ## Trademark & Attribution
 
-ISTQB® is a registered trademark of the International Software Testing Qualifications Board. The sample exam questions used in this project are based on the official ISTQB® Certified Tester Foundation Level (CTFL) sample papers and are used for educational and testing demonstration purposes.
+ISTQB® is a registered trademark of the International Software Testing Qualifications Board. The syllabi, sample exam questions, and related materials used in this project are official ISTQB® publications, used for educational and testing demonstration purposes.
+

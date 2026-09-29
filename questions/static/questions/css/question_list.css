@@ -223,6 +223,11 @@ header h1 {
     background: rgba(255, 255, 255, .25);
 }
 
+.syllabus-link .exam-badge {
+    background: transparent;
+    font-size: 1.05rem;
+}
+
 /* ── Content area ── */
 .content-area {
     flex: 1;
@@ -287,6 +292,27 @@ main {
     flex: 1;
     line-height: 1.5;
     white-space: pre-wrap;
+}
+
+/* ── Data table embedded in a question stem ── */
+.q-data-table {
+    border-collapse: collapse;
+    margin: .6rem 0;
+    font-size: .85rem;
+    font-weight: 500;
+    white-space: normal;
+}
+
+.q-data-table th,
+.q-data-table td {
+    border: 1px solid #cbd5e0;
+    padding: .35rem .6rem;
+    text-align: center;
+}
+
+.q-data-table th {
+    background: #edf2f7;
+    font-weight: 700;
 }
 
 /* ── Radio options ── */

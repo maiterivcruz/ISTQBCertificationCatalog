@@ -5,6 +5,7 @@ class Question(models.Model):
     EXAM_CHOICES = [('A', 'Exam A'), ('B', 'Exam B'),
                     ('C', 'Exam C'), ('D', 'Exam D'), ('E', 'Exam A – Appendix')]
 
+    certification = models.CharField(max_length=20, default='ctfl')
     text = models.TextField()
     answer = models.TextField()
     order = models.PositiveIntegerField(default=0)
@@ -13,7 +14,7 @@ class Question(models.Model):
         max_length=10, blank=True)  # e.g. "c" or "b,c"
 
     class Meta:
-        ordering = ['exam', 'order']
+        ordering = ['certification', 'exam', 'order']
 
     def __str__(self):
         return f'[{self.exam}] {self.text[:80]}'

@@ -20,19 +20,18 @@
 
   <main>
     <h2 class="page-title">Available Certifications</h2>
-    <p class="page-sub">Click an exam button on any certification to start practicing. Certifications marked <em>Coming
-        Soon</em> will be added in future updates.</p>
+    <p class="page-sub">Click an exam button to start practicing, or download the syllabus and sample exam materials for
+      any certification.</p>
 
     {% for section in certifications %}
     <div class="category-section">
       <div class="category-heading">{{ section.category }}</div>
       <div class="card-grid">
         {% for cert in section.items %}
-        <div class="cert-card {% if not cert.available %}unavailable{% endif %}">
+        <div class="cert-card">
           <div class="card-top">
             <div class="badge-row">
               <span class="badge badge-{{ cert.badge_color }}">{{ cert.badge }}</span>
-              {% if not cert.available %}<span class="badge-coming-soon">Coming Soon</span>{% endif %}
               <span class="cert-short">{{ cert.short }}</span>
             </div>
             <div class="cert-title">{{ cert.title }}</div>
@@ -40,11 +39,14 @@
           </div>
 
           <div class="card-footer">
-            {% if cert.available %}
             {% for exam in cert.exams %}
-            <a href="{% url 'question_list' exam=exam.exam_id %}" class="btn-exam">{{ exam.label }}</a>
+            <a href="{% url 'question_list' cert_id=cert.id exam=exam.exam_id %}" class="btn-exam">{{ exam.label }}</a>
             {% endfor %}
-            {% else %}
+            {% if cert.resource_dir %}
+            <a href="{% url 'syllabus' cert_id=cert.id %}" class="btn-syllabus" target="_blank"
+              rel="noopener noreferrer">&#128196; Syllabus</a>
+            {% endif %}
+            {% if not cert.exams %}
             <span class="btn-disabled">No Exams Yet</span>
             {% endif %}
           </div>

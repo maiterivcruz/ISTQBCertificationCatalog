@@ -3,9 +3,49 @@ const originalOrder = [...document.querySelectorAll('.question-card')];
 
 let submitted = false;
 
+const EXAM_DURATION_SECONDS = 60 * 60;
+let timerSecondsLeft = EXAM_DURATION_SECONDS;
+let timerInterval = null;
+
+function formatTime(totalSeconds) {
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function updateTimerDisplay() {
+    document.getElementById('timer-count').textContent = formatTime(timerSecondsLeft);
+}
+
+function startTimer() {
+    stopTimer();
+    timerInterval = setInterval(() => {
+        timerSecondsLeft--;
+        updateTimerDisplay();
+        if (timerSecondsLeft <= 0) {
+            stopTimer();
+            submitExam();
+        }
+    }, 1000);
+}
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
+
+function resetTimer() {
+    timerSecondsLeft = EXAM_DURATION_SECONDS;
+    updateTimerDisplay();
+    startTimer();
+}
+
 function submitExam() {
     if (submitted) return;
     submitted = true;
+    stopTimer();
     document.getElementById('submit-btn').disabled = true;
 
     let right = 0, wrong = 0;
@@ -64,6 +104,7 @@ function resetAll() {
     document.getElementById('submit-btn').disabled = false;
     document.getElementById('right-count').textContent = '0';
     document.getElementById('wrong-count').textContent = '0';
+    resetTimer();
 
     const statusEl = document.getElementById('status-text');
     statusEl.textContent = 'Pending';
@@ -110,3 +151,5 @@ function shuffleQuestions() {
         card.querySelector('.q-number').textContent = i + 1;
     });
 }
+
+startTimer();
