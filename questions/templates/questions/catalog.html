@@ -46,6 +46,10 @@
             <a href="{% url 'syllabus' cert_id=cert.id %}" class="btn-syllabus" target="_blank"
               rel="noopener noreferrer">&#128196; Syllabus</a>
             {% endif %}
+            {% if cert.has_chapters %}
+            <a href="{% url 'chapter' cert_id=cert.id number=1 %}" class="btn-syllabus btn-chapters">&#128214;
+              Chapters</a>
+            {% endif %}
             {% if not cert.exams %}
             <span class="btn-disabled">No Exams Yet</span>
             {% endif %}

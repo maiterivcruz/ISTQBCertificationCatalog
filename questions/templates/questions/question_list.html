@@ -43,32 +43,7 @@
     <div class="shell">
 
         <!-- Left sidebar -->
-        <nav class="sidebar">
-            <div class="sidebar-title">Select Exam</div>
-            {% for e in exams %}
-            {% if e.exam_id == 'E' %}
-            <hr class="sidebar-divider">
-            <a href="{% url 'syllabus' cert_id=cert_id %}" class="exam-link syllabus-link" target="_blank"
-                rel="noopener noreferrer">
-                <div class="exam-badge">&#128196;</div>
-                Syllabus
-            </a>
-            <hr class="sidebar-divider">{% endif %}
-            <a href="{% url 'question_list' cert_id=cert_id exam=e.exam_id %}"
-                class="exam-link {% if e.exam_id == current_exam %}active{% endif %}">
-                <div class="exam-badge">{{ e.exam_id }}</div>
-                {{ e.label }}
-            </a>
-            {% endfor %}
-            {% if not has_appendix %}
-            <hr class="sidebar-divider">
-            <a href="{% url 'syllabus' cert_id=cert_id %}" class="exam-link syllabus-link" target="_blank"
-                rel="noopener noreferrer">
-                <div class="exam-badge">&#128196;</div>
-                Syllabus
-            </a>
-            {% endif %}
-        </nav>
+        {% include 'questions/_sidebar.html' %}
 
         <!-- Questions -->
         <div class="content-area">

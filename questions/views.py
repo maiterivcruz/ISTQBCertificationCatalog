@@ -4,9 +4,11 @@ from django.conf import settings
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
 from .models import Question
+from .chapters import get_chapters, get_chapter
 
 SYLLABUS_ROOT = Path(settings.BASE_DIR) / 'resources' / 'certifications'
-_OPTION_RE = re.compile(r'(?m)^([a-e])\)\s*(.+?)(?=\n[a-e]\)|\Z)', re.DOTALL)
+_OPTION_RE = re.compile(
+    r'(?m)^([a-e])[.)]\s*(.+?)(?=\n[a-e][.)]|\Z)', re.DOTALL)
 # Marks a pipe-delimited table embedded in question text, e.g.:
 # [[TABLE]]\nHeader1|Header2\nval1|val2\n[[/TABLE]]
 _TABLE_RE = re.compile(
@@ -97,7 +99,7 @@ CERTIFICATIONS = [
         ],
     },
     {
-        'category': 'Specialist',
+        'category': 'Specialist: Technologies and Approaches',
         'items': [
             {
                 'id': 'ct-ai',
@@ -176,6 +178,11 @@ CERTIFICATIONS = [
                 'exams': [],
                 'available': False,
             },
+        ],
+    },
+    {
+        'category': 'Specialist: Quality Characteristics & Test Levels',
+        'items': [
             {
                 'id': 'ct-act',
                 'title': 'Acceptance Testing',
@@ -231,6 +238,11 @@ CERTIFICATIONS = [
                 'exams': [],
                 'available': False,
             },
+        ],
+    },
+    {
+        'category': 'Specialist: Testing in Particular Domains',
+        'items': [
             {
                 'id': 'ct-ft',
                 'title': 'Finance Testing',
@@ -361,6 +373,7 @@ def catalog(request):
     for section in CERTIFICATIONS:
         for cert in section['items']:
             cert['exams'] = _cert_exams(cert['id'])
+            cert['has_chapters'] = bool(get_chapters(cert['id']))
     return render(request, 'questions/catalog.html', {
         'certifications': CERTIFICATIONS,
     })
@@ -388,6 +401,29 @@ def syllabus(request, cert_id):
         return render(request, 'questions/syllabus_missing.html', {'cert': cert})
 
     return FileResponse(open(pdf_path, 'rb'), content_type='application/pdf')
+
+
+def chapter(request, cert_id, number):
+    cert = _find_cert(cert_id)
+    if cert is None:
+        raise Http404('Unknown certification')
+    chapter_data = get_chapter(cert_id, number)
+    if chapter_data is None:
+        raise Http404('Unknown chapter')
+    exams = _cert_exams(cert_id)
+    chapters = get_chapters(cert_id)
+    idx = chapters.index(chapter_data)
+    return render(request, 'questions/chapter.html', {
+        'cert': cert,
+        'cert_id': cert_id,
+        'chapter': chapter_data,
+        'chapters': chapters,
+        'prev_chapter': chapters[idx - 1] if idx > 0 else None,
+        'next_chapter': chapters[idx + 1] if idx < len(chapters) - 1 else None,
+        'exams': exams,
+        'has_appendix': any(e['exam_id'] == 'E' for e in exams),
+        'current_chapter': number,
+    })
 
 
 def _parse_question(q):
@@ -445,6 +481,7 @@ def question_list(request, cert_id='ctfl', exam='A'):
         'current_exam_label': current_label,
         'exams': exams,
         'has_appendix': any(e['exam_id'] == 'E' for e in exams),
+        'chapters': get_chapters(cert_id),
         'cert': cert,
         'cert_id': cert_id,
     })

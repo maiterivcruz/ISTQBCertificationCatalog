@@ -1,0 +1,135 @@
+/* Study chapter pages; reuses header, sidebar and .page-intro from question_list.css */
+.chapter-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2d3748;
+}
+
+.chapter-meta {
+    display: block;
+    margin-top: .4rem;
+    font-size: .78rem;
+    color: #718096;
+}
+
+.chapter-card {
+    background: #fff;
+    border-radius: .75rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .1);
+    margin-bottom: 1.25rem;
+    padding: 1.1rem 1.4rem 1.3rem;
+}
+
+.chapter-card h3 {
+    font-size: 1.05rem;
+    margin-bottom: .5rem;
+    color: #2d3748;
+}
+
+.chapter-summary {
+    color: #4a5568;
+    font-size: .94rem;
+    line-height: 1.6;
+    margin-bottom: .6rem;
+}
+
+.chapter-card ul {
+    padding-left: 1.2rem;
+    font-size: .92rem;
+    line-height: 1.6;
+}
+
+.chapter-card li {
+    margin-bottom: .35rem;
+}
+
+.chapter-card code {
+    background: #edf2f7;
+    padding: .05rem .35rem;
+    border-radius: .25rem;
+    font-size: .85em;
+}
+
+.example-box {
+    margin-top: .9rem;
+    background: #ebf0ff;
+    border-left: 4px solid #667eea;
+    border-radius: .5rem;
+    padding: .75rem 1rem;
+    font-size: .9rem;
+    line-height: 1.6;
+    color: #2d3748;
+}
+
+.box-label {
+    font-size: .68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #667eea;
+    margin-bottom: .25rem;
+}
+
+.terms dt {
+    font-weight: 700;
+    font-size: .9rem;
+    margin-top: .5rem;
+}
+
+.terms dd {
+    font-size: .9rem;
+    color: #4a5568;
+}
+
+.tips-card {
+    border-left: 4px solid #48bb78;
+}
+
+.chapter-pager {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+.chapter-pager a {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+}
+.example-title {
+    font-weight: 700;
+    margin-bottom: .3rem;
+}
+
+.example-box ul {
+    margin: .4rem 0 0;
+    padding-left: 1.2rem;
+}
+
+.example-table {
+    border-collapse: collapse;
+    margin: .6rem 0;
+    background: #fff;
+    font-size: .85rem;
+}
+
+.example-table th,
+.example-table td {
+    border: 1px solid #cbd5e0;
+    padding: .35rem .6rem;
+    text-align: center;
+}
+
+.example-table th {
+    background: #edf2f7;
+}
+
+.example-code {
+    background: #2d3748;
+    color: #e2e8f0;
+    border-radius: .4rem;
+    padding: .6rem .9rem;
+    margin: .5rem 0;
+    font-size: .82rem;
+    overflow-x: auto;
+}

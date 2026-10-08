@@ -19,7 +19,7 @@ A Django web app for browsing the full ISTQB® certification catalog and practic
 
 ## Requirements
 
-- Python 3.10+
+- Python 3.12+
 - Django 6.x (installed via virtual environment)
 - `pypdf` (for parsing sample exam PDFs)
 
@@ -35,19 +35,40 @@ source venv/bin/activate        # macOS / Linux
 # venv\Scripts\activate         # Windows
 
 # 3. Install dependencies
-python -m pip install django pypdf
+python -m pip install -r requirements.txt
 
-# 4. Apply migrations
+# 4. Create your local environment file and replace its SECRET_KEY placeholder
+cp .env.example .env
+python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())'
+
+# 5. Apply migrations
 python manage.py migrate
 
-# 5. (Optional) Create an admin superuser
+# 6. (Optional) Create an admin superuser
 python manage.py createsuperuser
 
-# 6. Start the development server
+# 7. Start the development server
 python manage.py runserver
 ```
 
 Open http://127.0.0.1:8000/ in your browser. The database (`db.sqlite3`) already ships with sample exam questions seeded for 21 certifications — no seeding step is required to try the app.
+
+## Render Deployment
+
+The WSGI application is `config.wsgi:application`. Set these Render environment variables:
+
+| Key | Value |
+|---|---|
+| `SECRET_KEY` | Generate a fresh key; do not reuse the local key |
+| `DEBUG` | `False` |
+| `ALLOWED_HOSTS` | Your Render hostname, e.g. `your-service.onrender.com` |
+
+Use these service commands:
+
+- **Build Command:** `pip install -r requirements.txt && python manage.py collectstatic --noinput`
+- **Start Command:** `python manage.py migrate --noinput && gunicorn config.wsgi:application`
+
+SQLite remains configured at `BASE_DIR / "db.sqlite3"` and works with Django management commands, but Render's default filesystem is ephemeral. Use a persistent disk (and point SQLite at its mount path) or PostgreSQL if database contents must survive deploys/restarts or the service needs multiple instances.
 
 ## Managing Questions
 
@@ -145,4 +166,3 @@ Every certification has a downloadable syllabus PDF. Most also have an interacti
 ## Trademark & Attribution
 
 ISTQB® is a registered trademark of the International Software Testing Qualifications Board. The syllabi, sample exam questions, and related materials used in this project are official ISTQB® publications, used for educational and testing demonstration purposes.
-
