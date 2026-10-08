@@ -1,0 +1,40 @@
+<nav class="sidebar">
+    <div class="sidebar-title">Select Exam</div>
+    {% for e in exams %}
+    {% if e.exam_id == 'E' %}
+    <hr class="sidebar-divider">
+    <a href="{% url 'syllabus' cert_id=cert_id %}" class="exam-link syllabus-link" target="_blank"
+        rel="noopener noreferrer">
+        <div class="exam-badge">&#128196;</div>
+        Syllabus
+    </a>
+    {% for c in chapters %}
+    <a href="{% url 'chapter' cert_id=cert_id number=c.number %}"
+        class="exam-link chapter-link {% if c.number == current_chapter %}active{% endif %}">
+        <div class="exam-badge">{{ c.number }}</div>
+        Chapter {{ c.number }}
+    </a>
+    {% endfor %}
+    <hr class="sidebar-divider">{% endif %}
+    <a href="{% url 'question_list' cert_id=cert_id exam=e.exam_id %}"
+        class="exam-link {% if e.exam_id == current_exam %}active{% endif %}">
+        <div class="exam-badge">{{ e.exam_id }}</div>
+        {{ e.label }}
+    </a>
+    {% endfor %}
+    {% if not has_appendix %}
+    <hr class="sidebar-divider">
+    <a href="{% url 'syllabus' cert_id=cert_id %}" class="exam-link syllabus-link" target="_blank"
+        rel="noopener noreferrer">
+        <div class="exam-badge">&#128196;</div>
+        Syllabus
+    </a>
+    {% for c in chapters %}
+    <a href="{% url 'chapter' cert_id=cert_id number=c.number %}"
+        class="exam-link chapter-link {% if c.number == current_chapter %}active{% endif %}">
+        <div class="exam-badge">{{ c.number }}</div>
+        Chapter {{ c.number }}
+    </a>
+    {% endfor %}
+    {% endif %}
+</nav>

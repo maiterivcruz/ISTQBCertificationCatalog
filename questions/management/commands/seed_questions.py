@@ -23,6 +23,29 @@ NOISE_MARKER_RE = re.compile(
     re.IGNORECASE,
 )
 
+# A line starting with one of these is a genuine new item (an answer option,
+# a bullet, or a numbered list entry) — anything else is just a PDF line-wrap
+# of the previous line and should be rejoined with a space instead of a break.
+_NEW_LINE_START_RE = re.compile(r'^(?:[a-eA-E][.)]\s|[•*-]\s|\d+[.)]\s)')
+
+
+def _dewrap(text):
+    """Rejoin PDF line-wraps within a sentence/option into a single line,
+    while preserving real breaks before list items and blank lines."""
+    out = []
+    for raw_line in text.split('\n'):
+        line = raw_line.strip()
+        if not line:
+            if out and out[-1] != '':
+                out.append('')
+            continue
+        if out and out[-1] and not _NEW_LINE_START_RE.match(line):
+            out[-1] = f'{out[-1]} {line}'
+        else:
+            out.append(line)
+    return '\n'.join(out)
+
+
 # PDF text extraction loses table layout (columns are flattened out of order).
 # These manual corrections restore the table for known affected questions using
 # the [[TABLE]]/[[/TABLE]] markup understood by questions.views._parse_question.
@@ -58,8 +81,9 @@ def _pdf_text(path):
 
 def _parse_questions(raw):
     """Return list of {num, text} from the Questions PDF (skips ToC lines)."""
-    # Split on question markers
-    parts = re.split(r'Question\s+#([\w]+)\s+\(\d+ [Pp]oints?\)', raw)
+    # Split on question markers — the "#" before the number is optional
+    # (some certs use "Question 1 (1 Point)" instead of "Question #1 (...)").
+    parts = re.split(r'Question\s+#?([\w]+)\s+\(\d+ [Pp]oints?\)', raw)
     questions = []
     for i in range(1, len(parts), 2):
         num = parts[i].strip()
@@ -78,6 +102,7 @@ def _parse_questions(raw):
         if noise_match and noise_match.start() > 20:
             body = body[:noise_match.start()]
         body = body.strip()
+        body = _dewrap(body)
         dot_ratio = body.count('.') / max(len(body), 1)
         starts_with_dots = bool(re.match(r'^[\s.]{10,}', body))
         if len(body) > 20 and dot_ratio < 0.2 and not starts_with_dots:
@@ -116,6 +141,7 @@ def _parse_answers(raw):
             cut = min(cuts)
             if cut > 20:
                 explanation = explanation[:cut].strip()
+        explanation = _dewrap(explanation)
 
         if re.match(r'^(\d+|A\d+)$', num) and explanation:
             answers[num] = (

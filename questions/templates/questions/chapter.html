@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ISTQB&reg; {{ cert.short }} &mdash; Chapter {{ chapter.number }}</title>
+    <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/css/question_list.css' %}">
+    <link rel="stylesheet" href="{% static 'questions/css/chapter.css' %}">
+</head>
+
+<body>
+
+    <header>
+        <div class="header-left">
+            <a href="{% url 'catalog' %}" class="header-back-link">&#8592; Certifications</a>
+            <h1>ISTQB&reg; {{ cert.short }} &mdash; Chapter {{ chapter.number }}</h1>
+        </div>
+    </header>
+
+    <div class="shell">
+
+        {% include 'questions/_sidebar.html' %}
+
+        <div class="content-area">
+            <main>
+                <h2 class="chapter-title">{{ chapter.number }}. {{ chapter.title }}</h2>
+                <p class="page-intro">
+                    {{ chapter.intro }}
+                    <span class="chapter-meta">Syllabus time: {{ chapter.minutes }} minutes</span>
+                </p>
+
+                {% for s in chapter.sections %}
+                <section class="chapter-card">
+                    <h3>{{ s.title }}</h3>
+                    <p class="chapter-summary">{{ s.summary }}</p>
+                    {% if s.points %}
+                    <ul>
+                        {% for p in s.points %}<li>{{ p|safe }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% for ex in s.examples %}
+                    <div class="example-box">
+                        <div class="box-label">Real-world example</div>
+                        <div class="example-title">{{ ex.title }}</div>
+                        {{ ex.body|safe }}
+                    </div>
+                    {% endfor %}
+                    {% if s.example %}
+                    <div class="example-box">
+                        <div class="box-label">Real-world example</div>
+                        {{ s.example|safe }}
+                    </div>
+                    {% endif %}
+                </section>
+                {% endfor %}
+
+                <section class="chapter-card">
+                    <h3>Key terms</h3>
+                    <dl class="terms">
+                        {% for term, meaning in chapter.key_terms %}
+                        <dt>{{ term }}</dt>
+                        <dd>{{ meaning }}</dd>
+                        {% endfor %}
+                    </dl>
+                </section>
+
+                <section class="chapter-card tips-card">
+                    <h3>Exam tips</h3>
+                    <ul>
+                        {% for t in chapter.exam_tips %}<li>{{ t }}</li>{% endfor %}
+                    </ul>
+                </section>
+
+                <div class="chapter-pager">
+                    {% if prev_chapter %}
+                    <a href="{% url 'chapter' cert_id=cert_id number=prev_chapter.number %}">&#8592; Chapter
+                        {{ prev_chapter.number }}</a>
+                    {% else %}<span></span>{% endif %}
+                    {% if next_chapter %}
+                    <a href="{% url 'chapter' cert_id=cert_id number=next_chapter.number %}">Chapter
+                        {{ next_chapter.number }} &#8594;</a>
+                    {% endif %}
+                </div>
+            </main>
+        </div>
+
+    </div>
+
+    <footer class="site-footer">
+        Disclaimer: This application is an independent, non-commercial educational project created for training and test
+        automation demonstration purposes. Chapter summaries are original study notes based on the public
+        <a href="https://www.istqb.org" target="_blank" rel="noopener noreferrer">ISTQB&reg;</a> syllabus.
+        ISTQB&reg; is a registered trademark of the International Software Testing Qualifications Board.
+    </footer>
+
+</body>
+
+</html>
