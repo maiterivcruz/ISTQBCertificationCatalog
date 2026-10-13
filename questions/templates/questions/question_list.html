@@ -61,20 +61,22 @@
                         <div class="q-stem">
                             {{ q.stem_before }}
                             {% if q.table %}
-                            <table class="q-data-table">
-                                <thead>
-                                    <tr>
-                                        {% for h in q.table.headers %}<th>{{ h }}</th>{% endfor %}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for row in q.table.rows %}
-                                    <tr>
-                                        {% for cell in row %}<td>{{ cell }}</td>{% endfor %}
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="q-data-table">
+                                    <thead>
+                                        <tr>
+                                            {% for h in q.table.headers %}<th>{{ h }}</th>{% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for row in q.table.rows %}
+                                        <tr>
+                                            {% for cell in row %}<td>{{ cell }}</td>{% endfor %}
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                             {% endif %}
                             {{ q.stem_after }}
                         </div>

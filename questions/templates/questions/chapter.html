@@ -89,6 +89,18 @@
 
     </div>
 
+    <script>
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+        const examSidebar = document.getElementById('exam-sidebar');
+        if (sidebarToggleBtn && examSidebar) {
+            sidebarToggleBtn.addEventListener('click', () => {
+                const isOpen = examSidebar.classList.toggle('open');
+                sidebarToggleBtn.classList.toggle('open', isOpen);
+                sidebarToggleBtn.setAttribute('aria-expanded', String(isOpen));
+            });
+        }
+    </script>
+
     <footer class="site-footer">
         Disclaimer: This application is an independent, non-commercial educational project created for training and test
         automation demonstration purposes. Chapter summaries are original study notes based on the public

@@ -152,4 +152,16 @@ function shuffleQuestions() {
     });
 }
 
+/* Sidebar mobile drawer/dropdown toggle */
+const sidebarToggleBtn = document.getElementById('sidebar-toggle-btn');
+const examSidebar = document.getElementById('exam-sidebar');
+
+if (sidebarToggleBtn && examSidebar) {
+    sidebarToggleBtn.addEventListener('click', () => {
+        const isOpen = examSidebar.classList.toggle('open');
+        sidebarToggleBtn.classList.toggle('open', isOpen);
+        sidebarToggleBtn.setAttribute('aria-expanded', String(isOpen));
+    });
+}
+
 startTimer();

@@ -8,11 +8,36 @@
 }
 
 /* ── Base ── */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
 body {
     font-family: 'Segoe UI', system-ui, sans-serif;
     background: #f0f4f8;
     color: #1a202c;
     min-height: 100vh;
+    overflow-x: hidden;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ── Responsive Table Utility ── */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: .6rem 0;
 }
 
 /* ── Footer ── */
@@ -27,4 +52,10 @@ body {
 .site-footer a {
     color: #6b7280;
     text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 1.25rem 1rem 2rem;
+    }
 }

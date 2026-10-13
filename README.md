@@ -2,6 +2,10 @@
 
 A Django web app for browsing the full ISTQB® certification catalog and practicing sample exam questions, with per-certification navigation, radio-button answer selection, auto-grading, syllabus downloads, and a pass/fail score counter.
 
+🌐 **Live Demo:** [https://istqbcertificationcatalog.onrender.com/](https://istqbcertificationcatalog.onrender.com/)
+
+> **Note:** Because the app is hosted on Render's free tier, the service automatically spins down after a period of inactivity. If accessing the site for the first time or after idle time, please allow 1–2 minutes for the instance to spin up and load.
+
 ## Features
 
 - Certification catalog landing page covering **26 ISTQB® certifications** (Core Foundation, Core Advanced, Specialist, and Expert Level), organized by category
@@ -55,13 +59,16 @@ Open http://127.0.0.1:8000/ in your browser. The database (`db.sqlite3`) already
 
 ## Render Deployment
 
+- **Live Service URL:** [https://istqbcertificationcatalog.onrender.com/](https://istqbcertificationcatalog.onrender.com/)  
+  *(Free tier spins down when idle; cold starts may take ~1–2 minutes on first request).*
+
 The WSGI application is `config.wsgi:application`. Set these Render environment variables:
 
 | Key | Value |
 |---|---|
 | `SECRET_KEY` | Generate a fresh key; do not reuse the local key |
 | `DEBUG` | `False` |
-| `ALLOWED_HOSTS` | Your Render hostname, e.g. `your-service.onrender.com` |
+| `ALLOWED_HOSTS` | `istqbcertificationcatalog.onrender.com,localhost,127.0.0.1` |
 
 Use these service commands:
 

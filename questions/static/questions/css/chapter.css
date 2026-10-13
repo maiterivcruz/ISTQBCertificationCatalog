@@ -89,12 +89,27 @@
     display: flex;
     justify-content: space-between;
     margin-top: 1.5rem;
+    gap: 0.75rem;
 }
 
 .chapter-pager a {
     color: #667eea;
     font-weight: 600;
     text-decoration: none;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .5rem 1rem;
+    background: #fff;
+    border: 1px solid #cbd5e0;
+    border-radius: .4rem;
+    transition: background .15s, border-color .15s;
+}
+
+.chapter-pager a:hover {
+    background: #ebf0ff;
+    border-color: #667eea;
 }
 .example-title {
     font-weight: 700;
@@ -111,6 +126,11 @@
     margin: .6rem 0;
     background: #fff;
     font-size: .85rem;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .example-table th,
@@ -132,4 +152,25 @@
     margin: .5rem 0;
     font-size: .82rem;
     overflow-x: auto;
+    max-width: 100%;
+    white-space: pre;
+}
+
+@media (max-width: 768px) {
+    .chapter-title {
+        font-size: 1.25rem;
+    }
+
+    .chapter-card {
+        padding: 1rem 1rem 1.15rem;
+    }
+
+    .chapter-pager {
+        flex-wrap: wrap;
+    }
+
+    .chapter-pager a {
+        flex: 1 1 auto;
+        min-width: 130px;
+    }
 }
