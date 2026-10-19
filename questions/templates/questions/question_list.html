@@ -53,6 +53,23 @@
                     The correct answers and explanations will be revealed after submission.
                 </p>
 
+                {% if exam_structures %}
+                <section class="page-intro exam-structure">
+                    <h2>Exam Structure</h2>
+                    {% for s in exam_structures %}
+                    <div class="es-group">
+                        {% if exam_structures|length > 1 %}<h3>{{ s.title }}</h3>{% endif %}
+                        <ul class="es-list">
+                            <li>No. of Questions: <strong>{{ s.num_questions }}</strong></li>
+                            <li>Total Points: <strong>{{ s.total_points }}</strong></li>
+                            <li>Passing Score: <strong>{{ s.passing_score }}</strong></li>
+                            <li>Exam Length (mins): <strong>{{ s.minutes }}</strong> (+25% Non-Language: {{ s.minutes_extended }})</li>
+                        </ul>
+                    </div>
+                    {% endfor %}
+                </section>
+                {% endif %}
+
                 {% if questions %}
                 {% for q in questions %}
                 <div class="question-card" id="card-{{ q.id }}" data-correct="{{ q.correct_option }}">

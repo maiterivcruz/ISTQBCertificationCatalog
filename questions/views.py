@@ -3,7 +3,7 @@ from pathlib import Path
 from django.conf import settings
 from django.http import FileResponse, Http404
 from django.shortcuts import render, redirect
-from .models import Question
+from .models import ExamStructure, Question
 from .chapters import get_chapters, get_chapter
 
 SYLLABUS_ROOT = Path(settings.BASE_DIR) / 'resources' / 'certifications'
@@ -482,6 +482,7 @@ def question_list(request, cert_id='ctfl', exam='A'):
         'exams': exams,
         'has_appendix': any(e['exam_id'] == 'E' for e in exams),
         'chapters': get_chapters(cert_id),
+        'exam_structures': ExamStructure.objects.filter(certification=cert_id),
         'cert': cert,
         'cert_id': cert_id,
     })

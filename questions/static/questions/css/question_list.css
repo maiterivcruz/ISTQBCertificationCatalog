@@ -668,3 +668,50 @@ main {
         padding: 0.45rem 0.5rem;
     }
 }
+
+.exam-structure {
+    max-width: 100%;
+}
+
+.exam-structure h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+.exam-structure h3 {
+    margin: 0.6rem 0 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.es-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    font-size: 0.82rem;
+    color: #2d3748;
+}
+
+.es-list li {
+    position: relative;
+    padding: 0.35rem 0 0.35rem 1.4rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.es-list li::before {
+    content: "\2714";
+    position: absolute;
+    left: 0;
+    color: #1e3a5f;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+    .es-list {
+        grid-template-columns: 1fr;
+    }
+}
