@@ -668,3 +668,100 @@ main {
         padding: 0.45rem 0.5rem;
     }
 }
+
+.exam-structure {
+    max-width: 100%;
+}
+
+.exam-structure h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #1e3a5f;
+}
+
+.exam-structure h3 {
+    margin: 0.6rem 0 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.es-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.5rem;
+    font-size: 0.82rem;
+    color: #2d3748;
+}
+
+.es-list li {
+    position: relative;
+    padding: 0.35rem 0 0.35rem 1.4rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.es-list li::before {
+    content: "\2714";
+    position: absolute;
+    left: 0;
+    color: #1e3a5f;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 600px) {
+    .es-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+.timer-choice {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+    margin-top: 0.25rem;
+}
+
+#timer-badge:not(.timer-idle) .timer-choice {
+    display: none;
+}
+
+#timer-badge.timer-idle #timer-count {
+    display: none;
+}
+
+.timer-btn {
+    min-height: 36px;
+    min-width: 58px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #667eea;
+    border-radius: 0.4rem;
+    background: #fff;
+    color: #434190;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.timer-btn:hover {
+    background: #667eea;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    #timer-badge.timer-idle {
+        grid-column: 1 / -1;
+    }
+
+    .timer-choice {
+        justify-content: center;
+    }
+
+    .timer-btn {
+        min-height: 44px;
+        flex: 1;
+    }
+}

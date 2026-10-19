@@ -3,14 +3,16 @@ const originalOrder = [...document.querySelectorAll('.question-card')];
 
 let submitted = false;
 
-const EXAM_DURATION_SECONDS = 60 * 60;
-let timerSecondsLeft = EXAM_DURATION_SECONDS;
+let timerSecondsLeft = 0;
 let timerInterval = null;
+const timerBadge = document.getElementById('timer-badge');
 
 function formatTime(totalSeconds) {
-    const m = Math.floor(totalSeconds / 60);
+    const h = Math.floor(totalSeconds / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
     const s = totalSeconds % 60;
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    const mmss = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    return h > 0 ? `${h}:${mmss}` : mmss;
 }
 
 function updateTimerDisplay() {
@@ -36,11 +38,24 @@ function stopTimer() {
     }
 }
 
+/* Back to the pre-exam state: no countdown until a duration is chosen */
 function resetTimer() {
-    timerSecondsLeft = EXAM_DURATION_SECONDS;
+    stopTimer();
+    timerSecondsLeft = 0;
+    document.getElementById('timer-count').textContent = '--:--';
+    timerBadge.classList.add('timer-idle');
+}
+
+function startExamTimer(minutes) {
+    timerSecondsLeft = minutes * 60;
+    timerBadge.classList.remove('timer-idle');
     updateTimerDisplay();
     startTimer();
 }
+
+document.querySelectorAll('.timer-btn').forEach(btn => {
+    btn.addEventListener('click', () => startExamTimer(Number(btn.dataset.minutes)));
+});
 
 function submitExam() {
     if (submitted) return;
@@ -163,5 +178,3 @@ if (sidebarToggleBtn && examSidebar) {
         sidebarToggleBtn.setAttribute('aria-expanded', String(isOpen));
     });
 }
-
-startTimer();

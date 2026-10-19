@@ -18,3 +18,21 @@ class Question(models.Model):
 
     def __str__(self):
         return f'[{self.exam}] {self.text[:80]}'
+
+
+class ExamStructure(models.Model):
+    certification = models.CharField(max_length=20)
+    version = models.CharField(max_length=40, blank=True)
+    title = models.CharField(max_length=200)
+    num_questions = models.PositiveIntegerField()
+    total_points = models.PositiveIntegerField()
+    passing_score = models.PositiveIntegerField()
+    minutes = models.PositiveIntegerField()
+    minutes_extended = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['certification', 'order']
+
+    def __str__(self):
+        return f'{self.certification} {self.version}'.strip()
