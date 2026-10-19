@@ -18,9 +18,13 @@
             <h1>ISTQB&reg; {{ cert.short }} &mdash; {{ current_exam_label }}</h1>
         </div>
         <div id="header-right">
-            <div id="timer-badge" class="score-badge">
+            <div id="timer-badge" class="score-badge timer-idle">
                 <span class="label">Time left</span>
-                <span class="count" id="timer-count">60:00</span>
+                <span class="count" id="timer-count">--:--</span>
+                <div id="timer-choice" class="timer-choice">
+                    <button type="button" class="timer-btn" data-minutes="{{ timer_minutes.0 }}" title="Native speaker: {{ timer_minutes.0 }} minutes" aria-label="Native speaker: {{ timer_minutes.0 }} minutes">{{ timer_minutes.0 }} min</button>
+                    <button type="button" class="timer-btn" data-minutes="{{ timer_minutes.1 }}" title="Non-native speaker: {{ timer_minutes.1 }} minutes" aria-label="Non-native speaker: {{ timer_minutes.1 }} minutes">{{ timer_minutes.1 }} min</button>
+                </div>
             </div>
             <div class="score-badge">
                 <span class="label">Correct</span>

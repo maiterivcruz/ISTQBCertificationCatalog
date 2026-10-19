@@ -715,3 +715,53 @@ main {
         grid-template-columns: 1fr;
     }
 }
+
+
+.timer-choice {
+    display: flex;
+    flex-direction: row;
+    gap: 0.3rem;
+    margin-top: 0.25rem;
+}
+
+#timer-badge:not(.timer-idle) .timer-choice {
+    display: none;
+}
+
+#timer-badge.timer-idle #timer-count {
+    display: none;
+}
+
+.timer-btn {
+    min-height: 36px;
+    min-width: 58px;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #667eea;
+    border-radius: 0.4rem;
+    background: #fff;
+    color: #434190;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.timer-btn:hover {
+    background: #667eea;
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    #timer-badge.timer-idle {
+        grid-column: 1 / -1;
+    }
+
+    .timer-choice {
+        justify-content: center;
+    }
+
+    .timer-btn {
+        min-height: 44px;
+        flex: 1;
+    }
+}
