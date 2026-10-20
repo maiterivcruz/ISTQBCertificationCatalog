@@ -104,9 +104,10 @@
                     </div>
 
                     <div class="options">
+                        {% if q.multiple %}<p class="multi-hint">Select all that apply.</p>{% endif %}
                         {% for letter, text in q.options %}
                         <label class="option-label" id="lbl-{{ q.id }}-{{ letter }}">
-                            <input type="radio" name="q{{ q.id }}" value="{{ letter }}" />
+                            <input type="{% if q.multiple %}checkbox{% else %}radio{% endif %}" name="q{{ q.id }}" value="{{ letter }}" />
                             <span class="option-letter">{{ letter }})</span>
                             <span class="option-text">{{ text }}</span>
                         </label>

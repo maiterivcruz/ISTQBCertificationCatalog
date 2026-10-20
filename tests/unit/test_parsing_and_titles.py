@@ -47,3 +47,9 @@ def test_parse_extracts_table():
 def test_points_parsed_from_answer(answer, points):
     parsed = _parse_question(make_question('Q?\na) A\nb) B', answer=answer))
     assert parsed['points'] == points
+
+
+@pytest.mark.parametrize('correct, multiple', [('a', False), ('a,e', True), ('', False)])
+def test_multiple_flag_follows_correct_option(correct, multiple):
+    parsed = _parse_question(make_question('Q?\na) A\nb) B', correct_option=correct))
+    assert parsed['multiple'] is multiple

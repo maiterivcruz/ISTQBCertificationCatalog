@@ -63,10 +63,11 @@ def test_all_correct_answers_pass(exam):
     exam.expect_status('Passed')
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    'Multi-answer questions (e.g. correct_option "a,e") are rendered as '
-    'radio buttons, so they can never be answered correctly.'))
-def test_multi_answer_questions_can_be_answered_correctly(exam):
+def test_multi_answer_questions_use_checkboxes_and_score_correctly(exam):
+    multi = exam.page.locator('.question-card[data-correct*=","]')
+    assert multi.count() > 0
+    expect(multi.first.locator('input[type="checkbox"]').first).to_be_visible()
+    expect(multi.first.locator('input[type="radio"]')).to_have_count(0)
     exam.answer_all_correctly()
     exam.submit()
     expect(exam.wrong).to_have_text('0')

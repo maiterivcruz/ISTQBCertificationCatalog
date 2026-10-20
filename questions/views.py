@@ -466,6 +466,7 @@ def _parse_question(q):
         'options': options,
         'answer': q.answer,
         'correct_option': q.correct_option,
+        'multiple': ',' in (q.correct_option or ''),
     }
 
 
