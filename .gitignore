@@ -4,3 +4,7 @@ __pycache__/
 .DS_Store
 .env
 staticfiles/
+tests/reports/
+test-results/
+playwright-report/
+.pytest_cache/

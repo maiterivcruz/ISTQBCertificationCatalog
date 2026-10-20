@@ -110,7 +110,7 @@ Key options:
 
 For any certification other than CTFL, the command resolves default PDF paths from `resources/certifications/<CODE>/sample_exams/<CODE>_Sample-Exam-Questions.pdf` (and `-Answers.pdf`) automatically — no need to pass `--questions-pdf`/`--answers-pdf`.
 
-See [SKILL_load_pdf_questions.md](SKILL_load_pdf_questions.md) for full details on the PDF parsing format and how to adapt it for a new PDF layout.
+See [docs/SKILL_load_pdf_questions.md](docs/SKILL_load_pdf_questions.md) for full details on the PDF parsing format and how to adapt it for a new PDF layout.
 
 ## Project Structure
 
@@ -141,6 +141,18 @@ ISTQBCertificationCatalog/
 │   ├── models.py            # Question model (certification, exam, text, answer, correct_option)
 │   ├── urls.py
 │   └── views.py             # catalog, syllabus, question_list views + CERTIFICATIONS catalog data
+├── tests/                   # Automated tests (see Testing below)
+│   ├── unit/                # Parsing, titles, chapter registry
+│   ├── integration/         # Django test client smoke checks
+│   ├── e2e/                 # Playwright journeys + page objects
+│   └── performance/         # Locust load profile with budgets
+├── docs/                    # Developer guides (SKILL_*.md)
+├── .github/
+│   ├── workflows/ci.yml     # CI: unit/integration, e2e, scheduled perf
+│   └── skills/, prompt/     # Git workflow guides
+├── requirements.txt         # Production dependencies
+├── requirements-dev.txt     # Test dependencies (pytest, Playwright, Locust)
+├── pytest.ini
 ├── venv/                    # Virtual environment (not committed)
 ├── db.sqlite3               # SQLite database (not committed)
 ├── resources/
@@ -153,6 +165,28 @@ ISTQBCertificationCatalog/
 │           └── sample_exams/   # Sample exam Questions/Answers PDFs (where publicly available)
 └── manage.py
 ```
+
+## Testing
+
+```bash
+pip install -r requirements-dev.txt
+playwright install chromium          # once, for browser tests
+
+pytest tests/unit tests/integration  # fast, no browser
+pytest -m smoke                      # minimal post-deploy checks
+pytest tests/e2e                     # Playwright (starts a local server)
+BASE_URL=https://<your-app>.onrender.com pytest tests/e2e -m smoke   # against Render
+```
+
+Unit and integration tests run on a temporary copy of `db.sqlite3`; the committed
+file is never modified. Performance (Locust, budgets: p95 < 500 ms, errors < 1%):
+
+```bash
+gunicorn config.wsgi:application --bind 127.0.0.1:8000 --workers 2
+locust -f tests/performance/locustfile.py --headless -u 20 -r 5 -t 1m --host http://127.0.0.1:8000
+```
+
+Avoid load-testing the Render free tier. CI runs in `.github/workflows/ci.yml`.
 
 ## Certification Catalog
 

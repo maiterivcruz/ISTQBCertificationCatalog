@@ -1,0 +1,5 @@
+-r requirements.txt
+pytest>=8,<9
+pytest-django>=4.9,<5
+pytest-playwright>=0.7,<1
+locust>=2.32,<3
