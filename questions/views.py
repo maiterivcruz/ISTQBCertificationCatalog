@@ -379,10 +379,15 @@ def catalog(request):
     })
 
 
+def _full_title(title):
+    return title if title.startswith('Certified Tester') else f'Certified Tester {title}'
+
+
 def _find_cert(cert_id):
     for section in CERTIFICATIONS:
         for cert in section['items']:
             if cert['id'] == cert_id:
+                cert['full_title'] = _full_title(cert['title'])
                 return cert
     return None
 
@@ -449,8 +454,12 @@ def _parse_question(q):
         stem_before = stem[:table_match.start()].strip()
         stem_after = stem[table_match.end():].strip()
 
+    points_match = re.search(r'K\d\s+(\d+)\s*$', (q.answer or '').strip())
+    points = int(points_match.group(1)) if points_match else 1
+
     return {
         'id': q.id,
+        'points': points,
         'stem_before': stem_before,
         'table': table,
         'stem_after': stem_after,
@@ -485,6 +494,8 @@ def question_list(request, cert_id='ctfl', exam='A'):
         'has_appendix': any(e['exam_id'] == 'E' for e in exams),
         'chapters': get_chapters(cert_id),
         'exam_structures': exam_structures,
+        'pass_ratio': (primary.passing_score / primary.total_points
+                       if primary else 0.65),
         'timer_minutes': (primary.minutes if primary else 60,
                           primary.minutes_extended if primary else 75),
         'cert': cert,

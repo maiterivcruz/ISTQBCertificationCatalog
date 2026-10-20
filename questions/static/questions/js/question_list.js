@@ -63,7 +63,7 @@ function submitExam() {
     stopTimer();
     document.getElementById('submit-btn').disabled = true;
 
-    let right = 0, wrong = 0;
+    let right = 0, wrong = 0, earned = 0, maxPoints = 0;
 
     document.querySelectorAll('.question-card').forEach(card => {
         const id = card.id.replace('card-', '');
@@ -82,7 +82,10 @@ function submitExam() {
             selected.length === correct.length &&
             correct.every(c => selected.includes(c));
 
+        const points = Number(card.dataset.points) || 1;
+        maxPoints += points;
         isCorrect ? right++ : wrong++;
+        if (isCorrect) earned += points;
 
         selected.forEach(val => {
             const lbl = document.getElementById(`lbl-${id}-${val}`);
@@ -104,7 +107,8 @@ function submitExam() {
 
     const statusEl = document.getElementById('status-text');
     statusEl.classList.remove('status-pending', 'status-passed', 'status-failed');
-    if (right >= 26) {
+    const passRatio = parseFloat(document.body.dataset.passRatio) || 0.65;
+    if (maxPoints > 0 && earned / maxPoints >= passRatio) {
         statusEl.textContent = 'Passed';
         statusEl.classList.add('status-passed');
     } else {
