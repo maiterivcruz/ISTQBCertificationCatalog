@@ -68,7 +68,7 @@ function submitExam() {
     document.querySelectorAll('.question-card').forEach(card => {
         const id = card.id.replace('card-', '');
         const correct = card.dataset.correct.split(',').map(s => s.trim()).filter(Boolean);
-        const radios = card.querySelectorAll(`input[type="radio"][name="q${id}"]`);
+        const radios = card.querySelectorAll(`input[name="q${id}"]`);
         const selected = [];
 
         radios.forEach(r => {
@@ -140,7 +140,7 @@ function resetAll() {
         const id = card.id.replace('card-', '');
         card.querySelector('.q-number').textContent = i + 1;
 
-        card.querySelectorAll('input[type="radio"]').forEach(r => {
+        card.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(r => {
             r.checked = false;
             r.disabled = false;
         });

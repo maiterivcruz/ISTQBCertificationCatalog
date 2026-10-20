@@ -366,7 +366,8 @@ main {
     background: #ebf0ff;
 }
 
-.option-label input[type="radio"] {
+.option-label input[type="radio"],
+.option-label input[type="checkbox"] {
     margin-top: .18rem;
     width: 1.15rem;
     height: 1.15rem;
@@ -764,4 +765,11 @@ main {
         min-height: 44px;
         flex: 1;
     }
+}
+
+.multi-hint {
+    margin: 0 0 6px;
+    font-size: 0.8rem;
+    font-style: italic;
+    color: var(--text-muted, #64748b);
 }
