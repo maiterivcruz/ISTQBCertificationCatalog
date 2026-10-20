@@ -18,6 +18,9 @@ env:
   DEBUG: 'True'
   ALLOWED_HOSTS: localhost,127.0.0.1
 
+permissions:
+  contents: read
+
 jobs:
   unit-integration:
     runs-on: ubuntu-latest
