@@ -5,17 +5,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ISTQB&reg; {{ cert.short }} &mdash; {{ current_exam_label }}</title>
+    <title>ISTQB&reg; {{ cert.full_title }} ({{ cert.short }}) &mdash; {{ current_exam_label }}</title>
     <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
     <link rel="stylesheet" href="{% static 'questions/css/question_list.css' %}">
 </head>
 
-<body>
+<body data-pass-ratio="{{ pass_ratio|stringformat:'.4f' }}">
 
     <header>
         <div class="header-left">
             <a href="{% url 'catalog' %}" class="header-back-link">&#8592; Certifications</a>
-            <h1>ISTQB&reg; {{ cert.short }} &mdash; {{ current_exam_label }}</h1>
+            <h1>ISTQB&reg; {{ cert.full_title }} ({{ cert.short }}) &mdash; {{ current_exam_label }}</h1>
         </div>
         <div id="header-right">
             <div id="timer-badge" class="score-badge timer-idle">
@@ -76,7 +76,7 @@
 
                 {% if questions %}
                 {% for q in questions %}
-                <div class="question-card" id="card-{{ q.id }}" data-correct="{{ q.correct_option }}">
+                <div class="question-card" id="card-{{ q.id }}" data-correct="{{ q.correct_option }}" data-points="{{ q.points }}">
                     <div class="question-header">
                         <div class="q-number">{{ forloop.counter }}</div>
                         <div class="q-stem">

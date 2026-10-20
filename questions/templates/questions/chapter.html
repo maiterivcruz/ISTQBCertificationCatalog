@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ISTQB&reg; {{ cert.short }} &mdash; Chapter {{ chapter.number }}</title>
+    <title>ISTQB&reg; {{ cert.full_title }} ({{ cert.short }}) &mdash; Chapter {{ chapter.number }}</title>
     <link rel="stylesheet" href="{% static 'questions/css/base.css' %}">
     <link rel="stylesheet" href="{% static 'questions/css/question_list.css' %}">
     <link rel="stylesheet" href="{% static 'questions/css/chapter.css' %}">
@@ -16,7 +16,7 @@
     <header>
         <div class="header-left">
             <a href="{% url 'catalog' %}" class="header-back-link">&#8592; Certifications</a>
-            <h1>ISTQB&reg; {{ cert.short }} &mdash; Chapter {{ chapter.number }}</h1>
+            <h1>ISTQB&reg; {{ cert.full_title }} ({{ cert.short }}) &mdash; Chapter {{ chapter.number }}</h1>
         </div>
     </header>
 
