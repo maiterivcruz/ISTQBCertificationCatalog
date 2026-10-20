@@ -29,6 +29,7 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: pip install -r requirements-dev.txt
+      - run: python manage.py collectstatic --noinput
       - run: pytest tests/unit tests/integration
 
   e2e:
@@ -42,6 +43,7 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
       - run: pip install -r requirements-dev.txt
+      - run: python manage.py collectstatic --noinput
       - run: playwright install --with-deps chromium
       - run: pytest tests/e2e --tracing retain-on-failure --output test-results
       - uses: actions/upload-artifact@v4
@@ -59,6 +61,7 @@ jobs:
         with:
           python-version: '3.13'
       - run: pip install -r requirements-dev.txt
+      - run: python manage.py collectstatic --noinput
       - name: Start app
         run: |
           gunicorn config.wsgi:application --bind 127.0.0.1:8000 --workers 2 --daemon
