@@ -2,6 +2,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from questions.templatetags.question_filters import format_roman_numerals
 from questions.views import _full_title, _parse_question
 
 pytestmark = pytest.mark.unit
@@ -36,6 +37,22 @@ def test_parse_extracts_table():
     assert parsed['table']['rows'] == [['v1', 'v2']]
     assert parsed['stem_before'] == 'Intro'
     assert parsed['stem_after'] == 'After'
+
+
+def test_parse_extracts_diagram_image():
+    text = ('Intro\n[[IMAGE:diagram.png]]\nAfter\n'
+            'a) A\nb) B')
+    parsed = _parse_question(make_question(text))
+    assert parsed['diagram_image'] == 'diagram.png'
+    assert parsed['stem_before'] == 'Intro'
+    assert parsed['stem_after'] == 'After'
+
+
+def test_format_roman_numerals():
+    text = 'Which statements are true? i. First ii. Second'
+    formatted = format_roman_numerals(text)
+    assert '<span class="roman-item">i. First </span>' in formatted
+    assert '<span class="roman-item">ii. Second</span>' in formatted
 
 
 @pytest.mark.parametrize('answer, points', [
