@@ -9,10 +9,11 @@ from .chapters import get_chapters, get_chapter
 SYLLABUS_ROOT = Path(settings.BASE_DIR) / 'resources' / 'certifications'
 _OPTION_RE = re.compile(
     r'(?m)^([a-e])[.)]\s*(.+?)(?=\n[a-e][.)]|\Z)', re.DOTALL)
-# Marks a pipe-delimited table embedded in question text, e.g.:
-# [[TABLE]]\nHeader1|Header2\nval1|val2\n[[/TABLE]]
 _TABLE_RE = re.compile(
     r'\[\[TABLE\]\]\s*\n(.*?)\n\s*\[\[/TABLE\]\]\s*\n?', re.DOTALL)
+
+# Matches [[IMAGE:filename.png]]
+_IMAGE_RE = re.compile(r'\[\[IMAGE:\s*([a-zA-Z0-9_.-]+)\s*\]\]')
 
 # Certification catalog — add new entries here to extend the app
 CERTIFICATIONS = [
@@ -432,7 +433,7 @@ def chapter(request, cert_id, number):
 
 
 def _parse_question(q):
-    """Split question text into stem (with optional embedded table) and list of (letter, text) options."""
+    """Split question text into stem (with optional embedded table and diagram) and options."""
     text = q.text
     options = []
     first_match = _OPTION_RE.search(text)
@@ -441,9 +442,18 @@ def _parse_question(q):
         options.append((m.group(1), m.group(2).strip()))
 
     table = None
+    diagram_image = None
     stem_before, stem_after = stem, ''
-    table_match = _TABLE_RE.search(stem)
-    if table_match:
+
+    # 1. Check for embedded diagram marker
+    img_match = _IMAGE_RE.search(stem)
+    if img_match:
+        diagram_image = img_match.group(1).strip()
+        stem_before = stem[:img_match.start()].strip()
+        stem_after = stem[img_match.end():].strip()
+    # 2. Check for embedded table marker
+    elif _TABLE_RE.search(stem):
+        table_match = _TABLE_RE.search(stem)
         lines = [line.strip()
                  for line in table_match.group(1).strip().split('\n') if line.strip()]
         if lines:
@@ -462,6 +472,7 @@ def _parse_question(q):
         'points': points,
         'stem_before': stem_before,
         'table': table,
+        'diagram_image': diagram_image,  # <--- Added
         'stem_after': stem_after,
         'options': options,
         'answer': q.answer,

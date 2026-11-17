@@ -46,10 +46,11 @@ def _dewrap(text):
     return '\n'.join(out)
 
 
-# PDF text extraction loses table layout (columns are flattened out of order).
-# These manual corrections restore the table for known affected questions using
-# the [[TABLE]]/[[/TABLE]] markup understood by questions.views._parse_question.
-# Keyed by (exam, 1-based question order after PDF parsing).
+# PDF text extraction loses table layout (columns are flattened out of order)
+# or omits visual diagrams (state transition diagrams, workflow charts).
+# These manual corrections restore the table and diagram references using the
+# [[TABLE]]/[[/TABLE]] and [[IMAGE:filename.png]] markups understood by questions.views._parse_question.
+# Keyed by (cert_id, exam, 1-based order) or (exam, 1-based order).
 TEXT_CORRECTIONS = {
     ('A', 21): (
         'You are testing a system that calculates the final course grade for a given student. '
@@ -64,6 +65,47 @@ TEXT_CORRECTIONS = {
         '[[/TABLE]]\n'
         'What is the 2-value boundary value analysis (BVA) coverage for the final result that is achieved with '
         'the existing test cases? \n\na) 50% \nb) 60% \nc) 33.3% \nd) 100%'
+    ),
+    ('A', 23): (
+        'You test a system whose lifecycle is modeled by the state transition diagram shown below. '
+        'The system starts in the INIT state and ends its operation in the OFF state.\n\n'
+        '[[IMAGE:ctfl_a_q23.png]]\n\n'
+        'What is the MINIMAL number of test cases to achieve valid transitions coverage?\n\n'
+        'a) 4\n'
+        'b) 2\n'
+        'c) 7\n'
+        'd) 3'
+    ),
+    ('B', 23): (
+        'A storage system can store up to three elements and is modeled by the following state transition diagram. '
+        'The variable N represents the number of currently stored elements.\n\n'
+        '[[IMAGE:ctfl_b_q23.png]]\n\n'
+        'Which of the following test cases, represented as sequences of events, achieves the highest level of valid transitions coverage?\n\n'
+        'a) Add, Remove, Add, Add, Add\n'
+        'b) Add, Add, Add, Add, Remove, Remove\n'
+        'c) Add, Add, Add, Remove, Remove\n'
+        'd) Add, Add, Add, Remove, Add'
+    ),
+    ('C', 23): (
+        'You are designing test cases based on the following state transition diagram:\n\n'
+        '[[IMAGE:ctfl_c_q23.png]]\n\n'
+        'What is the MINIMUM number of test cases required to achieve 100% valid transitions coverage?\n\n'
+        'a) 3\n'
+        'b) 2\n'
+        'c) 5\n'
+        'd) 6'
+    ),
+    ('ctal-ta', 'A', 18): (
+        'You are testing a system that implements a circuit breaker pattern. '
+        'The system is modeled with the state transition diagram shown below.\n\n'
+        '[[IMAGE:ctal-ta_a_q18.png]]\n\n'
+        'All potential round trips are feasible. You have already designed the test case exercising the following sequence of states: '
+        'Closed, Open, HalfOpen, Closed, Open, HalfOpen, Open, End '
+        'What is the round trip coverage achieved by this test case?\n\n'
+        'a) 100%\n'
+        'b) 50%\n'
+        'c) 60%\n'
+        'd) 80%'
     ),
 }
 
@@ -243,7 +285,10 @@ class Command(BaseCommand):
         exam = options['exam']
         for order, q in enumerate(questions, start=1):
             num = q['num']
-            text = TEXT_CORRECTIONS.get((exam, order), q['text'])
+            text = TEXT_CORRECTIONS.get(
+                (cert_id, exam, order),
+                TEXT_CORRECTIONS.get((exam, order), q['text'])
+            )
             correct_letter, answer_text = answers.get(
                 num, ('', 'See official ISTQB answer key.'))
             _, was_created = Question.objects.update_or_create(

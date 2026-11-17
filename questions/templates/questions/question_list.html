@@ -1,4 +1,5 @@
 {% load static %}
+{% load question_filters %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -80,7 +81,15 @@
                     <div class="question-header">
                         <div class="q-number">{{ forloop.counter }}</div>
                         <div class="q-stem">
-                            {{ q.stem_before }}
+                            {{ q.stem_before|format_roman_numerals }}
+                            {% if q.diagram_image %}
+                            <div class="q-diagram-container">
+                                <img src="{% static 'questions/images/diagrams/' %}{{ q.diagram_image }}"
+                                    alt="State transition diagram for Question {{ forloop.counter }}"
+                                    class="q-diagram-image"
+                                    loading="lazy" />
+                            </div>
+                            {% endif %}
                             {% if q.table %}
                             <div class="table-responsive">
                                 <table class="q-data-table">
@@ -99,7 +108,7 @@
                                 </table>
                             </div>
                             {% endif %}
-                            {{ q.stem_after }}
+                            {{ q.stem_after|format_roman_numerals }}
                         </div>
                     </div>
 
@@ -109,14 +118,14 @@
                         <label class="option-label" id="lbl-{{ q.id }}-{{ letter }}">
                             <input type="{% if q.multiple %}checkbox{% else %}radio{% endif %}" name="q{{ q.id }}" value="{{ letter }}" />
                             <span class="option-letter">{{ letter }})</span>
-                            <span class="option-text">{{ text }}</span>
+                            <span class="option-text">{{ text|format_roman_numerals }}</span>
                         </label>
                         {% endfor %}
                     </div>
 
                     <div class="answer-panel" id="answer-{{ q.id }}">
                         <div class="answer-label">Explanation</div>
-                        {{ q.answer }}
+                        {{ q.answer|format_roman_numerals }}
                     </div>
                 </div>
                 {% endfor %}
